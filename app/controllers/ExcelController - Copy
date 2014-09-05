@@ -1,0 +1,16 @@
+<?php
+
+class ExcelController extends BaseController {
+
+	public function load($filepath = 'test.xls'){
+		Excel::load($filepath, function($reader){
+			echo "<pre>";
+			echo print_r($reader->first());
+
+			echo  $reader->get()->groupBy('name');
+			echo "</pre>";
+
+		});		
+	} 
+}
+?>
