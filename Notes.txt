@@ -1,1 +1,3 @@
 user login:http://code.tutsplus.com/tutorials/authentication-with-laravel-4--net-35593
+Laravel Excel: http://www.maatwebsite.nl/laravel-excel/docs/getting-started
+Email: https://github.com/andrewelkins/Laravel-4-Bootstrap-Starter-Site

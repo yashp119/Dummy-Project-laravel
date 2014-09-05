@@ -13,7 +13,7 @@ return array(
 	|
 	*/
 
-	'debug' => false,
+	'debug' => true,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://localhost',
+	'url' => 'http://localhost/Quantum',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'America/New_york',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ return array(
 	|
 	*/
 
-	'key' => 'jY9eJrUe6ZJcJCdXdGuyqzWvpWY3iaDe',
+	'key' => 'as85H6GFMJS3sXtynaypAagBFKMaORGW',
 
 	'cipher' => MCRYPT_RIJNDAEL_128,
 
@@ -94,7 +94,7 @@ return array(
 	*/
 
 	'providers' => array(
-
+		/* Laravel Base Providers */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
 		'Illuminate\Cache\CacheServiceProvider',
@@ -122,6 +122,20 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
+        /* Additional Providers */
+        'Zizaco\Confide\ConfideServiceProvider', // Confide Provider
+        'Zizaco\Entrust\EntrustServiceProvider', // Entrust Provider for roles
+        'Bllim\Datatables\DatatablesServiceProvider', // Datatables
+
+        /* Uncomment for use in development */
+        'Way\Generators\GeneratorsServiceProvider', // Generators
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider', // IDE Helpers
+
+        /* Laravel Excel */
+        'Maatwebsite\Excel\ExcelServiceProvider',
+ 
+        /* SalesForce */
+        'Davispeixoto\LaravelSalesforce\LaravelSalesforceServiceProvider',
 	),
 
 	/*
@@ -149,7 +163,7 @@ return array(
 	*/
 
 	'aliases' => array(
-
+		/* Laravel Base Aliases */
 		'App'             => 'Illuminate\Support\Facades\App',
 		'Artisan'         => 'Illuminate\Support\Facades\Artisan',
 		'Auth'            => 'Illuminate\Support\Facades\Auth',
@@ -188,6 +202,15 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+
+        /* Additional Aliases */
+        'Confide'         => 'Zizaco\Confide\ConfideFacade', // Confide Alias
+        'Entrust'         => 'Zizaco\Entrust\EntrustFacade', // Entrust Alias
+        'String'          => 'Andrew13\Helpers\String', // String
+        'Carbon'          => 'Carbon\Carbon', // Carbon
+        'Datatables'      => 'Bllim\Datatables\Datatables', // DataTables
+        
+        'Excel' 		  => 'Maatwebsite\Excel\Facades\Excel', //Laravel Excel
 
 	),
 

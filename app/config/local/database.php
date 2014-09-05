@@ -22,7 +22,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'Veira',
+			'database'  => 'veira',
 			'username'  => 'root',
 			'password'  => '',
 			'charset'   => 'utf8',

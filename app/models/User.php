@@ -28,10 +28,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	//form validation rules
 	public static $rules = array(
 		'registration_code'=>'required|exists:registration_code,registration_code',
-		'username'=>'required|alpha_num|unique:users|between:6,30',
+		//'username'=>'required|alpha_dash|between:6,30',
+		'firstname'=>'required|alpha|between:1,30',
+		'lastname'=>'required|alpha|between:1,30',
 		'email'=>'required|email|unique:users',
-		'password'=>'required|alpha_num|between:6,30|same:confirm_password',
-		'confirm_password'=>'required|alpha_num|between:6,30',
+		'password'=>'required|alpha_num|between:6,30|confirmed',
+		'password_confirmation'=>'required|alpha_num|between:6,30',
 		'accept_term'=>'required'
 		);
 

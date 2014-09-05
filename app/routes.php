@@ -10,12 +10,40 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-/*
+
+/** ------------------------------------------
+ *  Route model binding ex. Route::model('user','User');
+ *  ------------------------------------------
+ */
+
+/** ------------------------------------------
+ *  Route constraint patterns ex. Route::pattern('user', '[0-9]+');
+ *  ------------------------------------------
+ */
+
+/** ------------------------------------------
+ *  Admin Routes
+ *  ------------------------------------------
+ */
+
+/** ------------------------------------------
+ *  Frontend Routes
+ *  ------------------------------------------
+ */
+
+// User RESTful Routes
+Route::controller('users','UsersController');
+
+
+/** ------------------------------------------
+ *  Test
+ *  ------------------------------------------
+ */
 Route::get('/', function()
 {
 	return View::make('hello');
 });
-*/
+
 
 // ##########################
 Route::get('test',function(){
@@ -29,12 +57,24 @@ Route::get('login',function(){
 	return View::make('main');
 });
 
+//excel test
+Route::get('excel/load/{filepath?}','ExcelController@load');
+Route::get('excel/loadToView/{filepath?}/{sheetnum?}','ExcelController@loadToView');
+Route::controller('excel','ExcelController');
 
-// ############################
-Route::controller('users','UsersController');
+//salesforce test
+Route::get('/testSF', function() {
+try {
+		echo "<pre>";
+        echo print_r(Salesforce::describeLayout('Account'));
+        echo "</pre>";
+} catch (Exception $e) {
+    Log::error($e->getMessage());
+    die($e->getMessage() . $e->getTraceAsString());
+}
+});
 
-
-// ###################### 404
-Event::listen('404',function(){
-	return Response::error('404');
+Route::get('/userinfo', function(){
+	$data=array('id'=>'test','name'=>'haha','age'=>'19sui');
+	return View::make('userinfo', $data);
 });

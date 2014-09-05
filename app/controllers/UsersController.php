@@ -21,24 +21,61 @@ class UsersController extends BaseController {
 	}
 
 	protected $layout = "layouts.users_main";
-
-	public function getLogin(){
-		$this->layout->content = View::make('users.login');
+	// get
+	public function getSignin(){
+		$this->layout->content = View::make('users.signin');
+		$this->layout->pagename = 'Signin';
 	}
 
-	public function getRegister(){
-		$this->layout->content = View::make('users.register');
+	public function getLogin(){
+		return Redirect::to('users/signin');
+	}
+	public function getSignup(){
+		$this->layout->content = View::make('users.signup');
+		$this->layout->pagename = 'signup';
 	}
 
 	public function getDashboard(){
 		$this->layout->content = View::make('users.dashboard');
+		$this->layout->pagename = 'Dashboard';
+	}
+
+	public function getRecoverpassword(){
+		$this->layout->content = View::make('users.recoverpassword');
+		$this->layout->pagename = 'Recoverpassword';
 	}
 
 	public function getLogout(){
-		Auth::logout();
-		return Redirect::to('users/login')->with('message','You are now logged out!');
+		if(Auth::check())
+		{
+			Auth::logout();
+			return Redirect::to('users/signin')->with('message','You are now logged out!');			
+		}
+		else
+		{
+			return Redirect::to('users/signin')->with('message','Please signin first!');
+		}
+
 	}
 
+	//activate email by link
+	public function getEmailactivate($confirmation_token){
+		$validator = Validator::make(array('confirmation_token'=>$confirmation_token),array('confirmation_token'=>'required|exists:users'));
+		if($validator->passes())
+		{
+			$user = User::where('confirmation_token','=',$confirmation_token)->first();
+			$user->user_status = 1;
+			$user->confirmation_token = '';
+			$user->save();
+			return Redirect::to('users/signin')->with('message','Your email has been confirmed!');
+		}
+		else
+		{
+			return Redirect::to('users/signin');
+		}
+	}
+
+	//Post 
 	public function postCreate(){
 		//validation rules php in 'app/models/users.php'
 		$validator = Validator::make(Input::all(),User::$rules);
@@ -48,41 +85,145 @@ class UsersController extends BaseController {
 			//get more user information from registration_code table
 			$registration_code = Input::get('registration_code');
 			$code_detail = DB::table('registration_code')->where('registration_code',$registration_code)->first();
-			//check status of the code
+			//check status of the registration code
+			//only unused code can be registered
 			if($code_detail->status != 1)
 			{
-				return Redirect::to('users/register')->with('message','The registration_code has been used, please contact your provider!');
+				return Redirect::to('users/signup')->with('message','The registration code has been used, please contact your provider!');
 			}	else{
 				//update this code is used
-				DB::table('registration_code')->where('registration_code',$registration_code)->update(array('status'=> 0));
+				DB::table('registration_code')->where('registration_code',$registration_code)->update(array('status'=> 2));
 			}
 
+			//generate a random confirmation token
+			$confirmation_token = str_random(60);
+			$confirmation_link = url('users/emailactivate',$confirmation_token);
+			//send welcome email and activate link
+			Mail::send('emails.auth.welcome', array('email'=>Input::get('email'),'password'=>Input::get('password'),'firstname'=>Input::get('firstname'),'link'=>$confirmation_link),function($message){
+				$message->to(Input::get('email'))->subject('Account Created at Quantum');
+			});	
+
+			//store into database
 			$user = new User;
 			$user->registration_code = Input::get('registration_code');
-			$user->username = Input::get('username');
+			$user->user_status = 0;
+			$user->firstname = Input::get('firstname');
+			$user->lastname = Input::get('lastname');
+			$user->username = Input::get('firstname').Input::get('lastname');
 			$user->email = Input::get('email');
 			$user->password = Hash::make(Input::get('password'));
 			$user->group_id = $code_detail->group_id;
 			$user->salesforce_id = $code_detail->salesforce_id;
-			$user->save();
+			$user->confirmation_token = $confirmation_token;
+			$user->save();		
 
-			return Redirect::to('users/login')->with('message','Thanks for registering!');
+			return Redirect::to('users/signin')->with('message','Thanks for registering!<br><br>Please confirm your email before login.');
 		} 
 		else 
 		{
-			return Redirect::to('users/register')->with('message','The following errors occurred')->withErrors($validator)->withInput();
+			return Redirect::to('users/signup')->with('message','The following errors occurred')->withErrors($validator)->withInput();
 		}
 	}
 
-	public function postSignin(){
-		if(Auth::attempt(array('username'=>Input::get('username'),'password'=>Input::get('password')),Input::get('remember_me') === 'yes'))
+	public function postLogin(){
+		if(Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('password')),Input::get('remember_me') === 'on'))
 		{
-			return Redirect::intended('users/dashboard')->with('message','You are now logged in!');
+			//check user status 1 activated, 0 not activated, 2 suspended
+			if(Auth::user()->user_status === 1)
+			{
+				return Redirect::to('users/dashboard')->with('message','You are now logged in!');
+			}
+			//account is not activated, inform user and resend confirmation email
+			elseif(Auth::user()->user_status === 0)
+			{
+				Auth::logout();
+				//generate a hidden form
+				$form = Form::open(array('url'=>url('users/sendconfirmation'))).Form::hidden('email',Input::get('email')).Form::submit('Resend').Form::close();
+				return Redirect::to('users/signin')->with('message',"Please confirm your email first.<br><br>Resend confirmation email, please click: ".$form )->withInput();
+			}
+			elseif(Auth::user()->user_status === 2)
+			{	
+				Auth::logout();
+				return Redirect::to('users/signin')->with('message','Your account is suspended, please contact your Rep or web Admin.')->withInput();
+			}		
 		}
 		else
 		{
-			return Redirect::to('users/login')->with('message','Your username/password combination was incorrect ')->withInput();
+			return Redirect::to('users/signin')->with('message','Your email/password combination was incorrect ')->withInput();
+		}		
+	}
+
+	public function postRecoverpassword(){
+		$validator = Validator::make(Input::all(),array('email'=>'required|email|exists:users'));
+
+		if($validator->passes())
+		{
+			//generate a random password and update database
+			$newpassword = str_random(6);
+			$user = DB::table('users')->where('email',Input::get('email'))->update(array('password'=>Hash::make($newpassword)));
+
+			Mail::send('emails.auth.recoverpassword',array('token'=>$newpassword),function($message){
+				$message->to(Input::get('email'))->subject('Recover Password');
+			});
+
+			return Redirect::to('users/signin')->with('message','New password has been sent to your email address<br><br>Please use new password to signin!');			
 		}
+		else
+		{
+			return Redirect::to('users/recoverpassword')->with('message','The following errors occurred')->withErrors($validator)->withInput();
+		}
+	}
+
+	public function postChangepassword(){
+		if(Auth::check())
+		{
+			$rules = array(	'password'=>'required|alpha_num',
+							'newpassword'=>'required|alpha_num|between:6,30|confirmed|different:password',
+							'newpassword_confirmation'=>'required|alpha_num|between:6,30');
+
+			$validator = Validator::make(Input::all(),$rules);
+
+			if($validator->passes())
+			{
+				if(Hash::check(Input::get('password'),Auth::user()->password))
+				{
+					$user = User::find(Auth::id());
+					$user->password = Hash::make(Input::get('newpassword'));
+					$user->save();
+
+					return Redirect::to('users/dashboard')->with('message','Password change success!');
+				}
+				else
+				{
+					return Redirect::to('users/dashboard')->with('message','Your password is incorrect! <br><br>Please try again or recover password!');
+				}
+			}
+			else
+			{
+				return Redirect::to('users/dashboard')->with('message','The following errors occurred')->withErrors($validator);
+			}
+		}
+		else
+		{
+			return Redirect::to('users/signin')->with('message','Please signin first!');
+		}
+	}
+
+	public function postSendconfirmation(){
+		//generate a random token
+		$confirmation_token = str_random(60);
+		$confirmation_link = url('users/emailactivate',$confirmation_token);
+
+		$email = Input::get('email');
+		//store token in database
+		$user = DB::table('users')->where('email',$email)->update(array('confirmation_token'=>$confirmation_token));
+
+		//closure use 'use' to pass parameters
+		Mail::send('emails.auth.confirmation', array('link'=>$confirmation_link),function($message) use ($email){
+			$message->to($email)->subject('Activate Account');
+		});
+
+		return Redirect::to('users/signin')->with('message','Confirmation email has been sent!');
 	}
 
 }
