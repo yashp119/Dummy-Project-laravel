@@ -27,7 +27,8 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local' => array('Gang-Yang'),
-	'AWS' =>array('ip-172-31-34-111'),
+	'AWS'   => array('ip-172-31-34-111'),
+	'linux' => array('gang-Lenovo-Y410P'),
 ));
 
 /*
