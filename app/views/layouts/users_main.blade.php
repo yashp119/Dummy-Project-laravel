@@ -44,7 +44,7 @@
 
 				<div class="panel panel-sign">
 					<div class="panel-title-sign mt-xl text-right">
-						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> {{$pagename}}</h2>
+						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> {{$pagename or ''}}</h2>
 					</div>
 					
 					<div class="panel-body">
@@ -56,7 +56,7 @@
 							</div>
 						@endif
 
-						{{ $content }}
+						{{ $content or '' }}
 					</div>
 				</div>
 
