@@ -129,23 +129,28 @@ class UsersController extends BaseController {
 		if(Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('password')),Input::get('remember_me') === 'on'))
 		{
 			//check user status 1 activated, 0 not activated, 2 suspended
-			if(Auth::user()->user_status === 1)
+			if(Auth::user()->user_status == 1)
 			{
 				return Redirect::to('users/dashboard')->with('message','You are now logged in!');
 			}
 			//account is not activated, inform user and resend confirmation email
-			elseif(Auth::user()->user_status === 0)
+			elseif(Auth::user()->user_status == 0)
 			{
 				Auth::logout();
 				//generate a hidden form
 				$form = Form::open(array('url'=>url('users/sendconfirmation'))).Form::hidden('email',Input::get('email')).Form::submit('Resend').Form::close();
 				return Redirect::to('users/signin')->with('message',"Please confirm your email first.<br><br>Resend confirmation email, please click: ".$form )->withInput();
 			}
-			elseif(Auth::user()->user_status === 2)
+			elseif(Auth::user()->user_status == 2)
 			{	
 				Auth::logout();
 				return Redirect::to('users/signin')->with('message','Your account is suspended, please contact your Rep or web Admin.')->withInput();
-			}		
+			}
+			else
+			{
+				Auth::logout();
+				return Redirect::to('users/signin')->with('message','Your account status is invalid, please contact your Rep or web Admin.')->withInput();
+			}
 		}
 		else
 		{
