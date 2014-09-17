@@ -8,18 +8,18 @@
 
 	<div class="form-group mb-lg">
 		<label>Registration Code</label>
-		<input name="registration_code" type="text" class="form-control input-lg" />
+		<input name="registration_code" type="text" class="form-control input-lg" value="{{$_GET['registration_code'] or Input::old('registration_code')}}" />
 	</div>
 
 	<div class="form-group mb-none">
 		<div class="row">
 			<div class="col-sm-6 mb-lg">
 				<label>First Name</label>
-				<input name="firstname" type="text" class="form-control input-lg" />
+				<input name="firstname" type="text" class="form-control input-lg" value="{{Input::old('firstname')}}" />
 			</div>
 			<div class="col-sm-6 mb-lg">
 				<label>Last Name</label>
-				<input name="lastname" type="text" class="form-control input-lg" />
+				<input name="lastname" type="text" class="form-control input-lg" value="{{Input::old('lastname')}}" />
 			</div>
 		</div>
 	</div>
@@ -36,7 +36,7 @@
 -->
 	<div class="form-group mb-lg">
 		<label>Email Address</label>
-		<input name="email" type="email" class="form-control input-lg" />
+		<input name="email" type="email" class="form-control input-lg" value="{{Input::old('email')}}"/>
 	</div>
 <!--
 	<div class="form-group mb-none">
@@ -73,15 +73,6 @@
 			<button type="submit" class="btn btn-primary hidden-xs">Sign Up</button>
 			<button type="submit" class="btn btn-primary btn-block btn-lg visible-xs mt-lg">Sign Up</button>
 		</div>
-	</div>
-
-	<span class="mt-lg mb-lg line-thru text-center text-uppercase">
-		<span>or</span>
-	</span>
-
-	<div class="mb-xs text-center">
-		<a class="btn btn-facebook mb-md ml-xs mr-xs">Connect with <i class="fa fa-facebook"></i></a>
-		<a class="btn btn-twitter mb-md ml-xs mr-xs">Connect with <i class="fa fa-twitter"></i></a>
 	</div>
 
 	<p class="text-center">Already have an account yet? <a href="{{url('users/signin')}}">Sign In!</a>

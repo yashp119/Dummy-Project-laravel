@@ -43,7 +43,7 @@ Route::filter('auth', function()
 		}
 		else
 		{
-			return Redirect::guest('users/signin')->with('message','Please signin first!');
+			return Redirect::guest('users/signin')->with('message','Please signin first!')->with('messageType','warning');
 		}
 	}
 });

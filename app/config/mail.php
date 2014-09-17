@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'Laravel-Test@hahahahe2312.com', 'name' => 'Gang-Laravel'),
+	'from' => array('address' => 'no-reply@quantum.com', 'name' => 'no-reply'),
 
 	/*
 	|--------------------------------------------------------------------------

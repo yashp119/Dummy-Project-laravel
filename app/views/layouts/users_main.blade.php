@@ -49,12 +49,43 @@
 					
 					<div class="panel-body">
 						<!-- Error message -->
-						@if(Session::has('message'))
-							<div class="alert alert-info">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-								<p class="m-none text-semibold h6">{{Session::get('message')}}<p>
-							</div>
-						@endif
+					@if(Session::has('message'))
+						<?php 
+						//type: default, primary, success, info, warning, danger, dark
+						$messageType = 'default';
+						$messageIcon = "<i class='fa fa-flag'></i>";
+							if(Session::has('messageType'))
+							{
+								$messageType = Session::get('messageType');
+								switch ($messageType) {
+									case 'success':
+										$messageIcon = "<i class='fa fa-check-circle'></i>";
+										break;
+
+									case 'warning':
+										$messageIcon = "<i class='fa fa-warning'></i>";
+										break;
+
+									case 'info':
+										$messageIcon = "<i class='fa fa-info-circle'></i>";
+										break;
+
+									case 'danger':
+										$messageIcon = "<i class='fa fa-times-circle'></i>";
+										break;
+
+									default:
+										break;
+								}
+							}
+						echo "<div class='alert alert-".$messageType."'>";
+						?>
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+							<p class="m-none text-semibold h6">
+								{{$messageIcon.' '.Session::get('message')}}
+							<p>
+						</div>
+					@endif
 
 						{{ $content or '' }}
 					</div>
@@ -76,9 +107,6 @@
 		
 		<!-- Theme Base, Components and Settings -->
 		<script src="{{asset('assets/javascripts/theme.js')}}"></script>
-		
-		<!-- Theme Custom -->
-		<script src="{{asset('assets/javascripts/theme.custom.js')}}"></script>
 		
 		<!-- Theme Initialization Files -->
 		<script src="{{asset('assets/javascripts/theme.init.js')}}"></script>

@@ -22,6 +22,11 @@ class UsersController extends BaseController {
 
 	protected $layout = "layouts.users_main";
 	// get
+	public function missingMethod($parameters = array())
+	{
+		return Redirect::to('users/signin');
+	}
+
 	public function getSignin(){
 		$this->layout->content = View::make('users.signin');
 		$this->layout->pagename = 'Signin';
@@ -49,13 +54,24 @@ class UsersController extends BaseController {
 		if(Auth::check())
 		{
 			Auth::logout();
-			return Redirect::to('users/signin')->with('message','You are now logged out!');			
+			return Redirect::to('users/signin')->with('message','You are now logged out!')->with('messageType','success');			
 		}
 		else
 		{
-			return Redirect::to('users/signin')->with('message','Please signin first!');
+			return Redirect::to('users/signin')->with('message','Please signin first!')->with('messageType','danger');
 		}
+	}
 
+	public function getLogoutnomessage(){
+		if(Auth::check())
+		{
+			Auth::logout();
+			return Redirect::intended('users/signin');			
+		}
+		else
+		{
+			return Redirect::to('users/signin');
+		}
 	}
 
 	//activate email by link
@@ -67,7 +83,7 @@ class UsersController extends BaseController {
 			$user->user_status = 1;
 			$user->confirmation_token = '';
 			$user->save();
-			return Redirect::to('users/signin')->with('message','Your email has been confirmed!');
+			return Redirect::to('users/signin')->with('message','Your email has been confirmed!')->with('messageType','success');
 		}
 		else
 		{
@@ -89,7 +105,7 @@ class UsersController extends BaseController {
 			//only unused code can be registered
 			if($code_detail->status != 1)
 			{
-				return Redirect::to('users/signup')->with('message','The registration code has been used, please contact your provider!');
+				return Redirect::to('users/signup')->with('message','The registration code has been used, please contact your provider!')->with('messageType','danger');
 			}	else{
 				//update this code is used
 				DB::table('registration_code')->where('registration_code',$registration_code)->update(array('status'=> 2));
@@ -117,11 +133,11 @@ class UsersController extends BaseController {
 			$user->confirmation_token = $confirmation_token;
 			$user->save();		
 
-			return Redirect::to('users/signin')->with('message','Thanks for registering!<br><br>Please confirm your email before login.');
+			return Redirect::to('users/signin')->with('message','Thanks for registering!<br><br>Please confirm your email before login.')->with('messageType','success');
 		} 
 		else 
 		{
-			return Redirect::to('users/signup')->with('message','The following errors occurred')->withErrors($validator)->withInput();
+			return Redirect::to('users/signup')->with('message','The following errors occurred')->with('messageType','danger')->withErrors($validator)->withInput();
 		}
 	}
 
@@ -131,7 +147,7 @@ class UsersController extends BaseController {
 			//check user status 1 activated, 0 not activated, 2 suspended
 			if(Auth::user()->user_status == 1)
 			{
-				return Redirect::to('users/dashboard')->with('message','You are now logged in!');
+				return Redirect::intended('home/welcome')->with('message','You are now logged in!')->with('messageType','success');
 			}
 			//account is not activated, inform user and resend confirmation email
 			elseif(Auth::user()->user_status == 0)
@@ -139,22 +155,22 @@ class UsersController extends BaseController {
 				Auth::logout();
 				//generate a hidden form
 				$form = Form::open(array('url'=>url('users/sendconfirmation'))).Form::hidden('email',Input::get('email')).Form::submit('Resend').Form::close();
-				return Redirect::to('users/signin')->with('message',"Please confirm your email first.<br><br>Resend confirmation email, please click: ".$form )->withInput();
+				return Redirect::to('users/signin')->with('message',"Please confirm your email first.<br><br>Resend confirmation email, please click: ".$form )->with('messageType','danger')->withInput();
 			}
 			elseif(Auth::user()->user_status == 2)
 			{	
 				Auth::logout();
-				return Redirect::to('users/signin')->with('message','Your account is suspended, please contact your Rep or web Admin.')->withInput();
+				return Redirect::to('users/signin')->with('message','Your account is suspended, please contact your Rep or web Admin.')->with('messageType','danger')->withInput();
 			}
 			else
 			{
 				Auth::logout();
-				return Redirect::to('users/signin')->with('message','Your account status is invalid, please contact your Rep or web Admin.')->withInput();
+				return Redirect::to('users/signin')->with('message','Your account status is invalid, please contact your Rep or web Admin.')->with('messageType','danger')->withInput();
 			}
 		}
 		else
 		{
-			return Redirect::to('users/signin')->with('message','Your email/password combination was incorrect ')->withInput();
+			return Redirect::to('users/signin')->with('message','Your email/password combination was incorrect ')->with('messageType','danger')->withInput();
 		}		
 	}
 
@@ -171,11 +187,11 @@ class UsersController extends BaseController {
 				$message->to(Input::get('email'))->subject('Recover Password');
 			});
 
-			return Redirect::to('users/signin')->with('message','New password has been sent to your email address<br><br>Please use new password to signin!');			
+			return Redirect::to('users/signin')->with('message','New password has been sent to your email address<br><br>Please use new password to signin!')->with('messageType','success');			
 		}
 		else
 		{
-			return Redirect::to('users/recoverpassword')->with('message','The following errors occurred')->withErrors($validator)->withInput();
+			return Redirect::to('users/recoverpassword')->with('message','The following errors occurred')->with('messageType','danger')->withErrors($validator)->withInput();
 		}
 	}
 
@@ -196,21 +212,21 @@ class UsersController extends BaseController {
 					$user->password = Hash::make(Input::get('newpassword'));
 					$user->save();
 
-					return Redirect::to('users/dashboard')->with('message','Password change success!');
+					return Redirect::back()->with('message','Password change success!')->with('messageType','success');
 				}
 				else
 				{
-					return Redirect::to('users/dashboard')->with('message','Your password is incorrect! <br><br>Please try again or recover password!');
+					return Redirect::back()->with('message','Your password is incorrect! <br><br>Please try again or recover password!')->with('messageType','danger');
 				}
 			}
 			else
 			{
-				return Redirect::to('users/dashboard')->with('message','The following errors occurred')->withErrors($validator);
+				return Redirect::back()->with('message','Failed! The following errors occurred')->with('messageType','danger')->withErrors($validator);
 			}
 		}
 		else
 		{
-			return Redirect::to('users/signin')->with('message','Please signin first!');
+			return Redirect::to('users/signin')->with('message','Please signin first!')->with('messageType','danger');
 		}
 	}
 
@@ -228,7 +244,7 @@ class UsersController extends BaseController {
 			$message->to($email)->subject('Activate Account');
 		});
 
-		return Redirect::to('users/signin')->with('message','Confirmation email has been sent!');
+		return Redirect::to('users/signin')->with('message','Confirmation email has been sent!')->with('messageType','success');
 	}
 
 }

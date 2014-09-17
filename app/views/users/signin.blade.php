@@ -2,7 +2,7 @@
 	<div class="form-group mb-lg">
 		<label>Email</label>
 		<div class="input-group input-group-icon">
-			<input name="email" type="email" class="form-control input-lg" />
+			<input name="email" type="email" class="form-control input-lg" value="{{Input::old('email')}}"/>
 			<span class="input-group-addon">
 				<span class="icon icon-lg">
 					<i class="fa fa-user"></i>
@@ -39,14 +39,6 @@
 		</div>
 	</div>
 
-	<span class="mt-lg mb-lg line-thru text-center text-uppercase">
-		<span>or</span>
-	</span>
-
-	<div class="mb-xs text-center">
-		<a class="btn btn-facebook mb-md ml-xs mr-xs">Connect with <i class="fa fa-facebook"></i></a>
-		<a class="btn btn-twitter mb-md ml-xs mr-xs">Connect with <i class="fa fa-twitter"></i></a>
-	</div>
 
 	<p class="text-center">Don't have an account yet? <a href="{{url('users/signup')}}">Sign Up!</a>
 

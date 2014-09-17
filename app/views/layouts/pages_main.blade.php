@@ -1,11 +1,10 @@
 <!doctype html>
 <html class="fixed">
 	<head>
-
 		<!-- Basic -->
 		<meta charset="UTF-8">
 
-		<title>Blank Page | Porto Admin - Responsive HTML5 Template 1.0.0</title>
+		<title> | Quantum - Veira Web Application</title>
 		<meta name="keywords" content="HTML5 Admin Template" />
 		<meta name="description" content="Porto Admin - Responsive HTML5 Template">
 		<meta name="author" content="okler.net">
@@ -33,11 +32,23 @@
 
 		<!-- Head Libs -->
 		<script src="{{asset('assets/vendor/modernizr/modernizr.js')}}"></script>
+		
+		<!-- Vendor -->
+		<script src="{{asset('assets/vendor/jquery/jquery.js')}}"></script>
+		<script src="{{asset('assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js')}}"></script>
+		<script src="{{asset('assets/vendor/bootstrap/js/bootstrap.js')}}"></script>
+		<script src="{{asset('assets/vendor/nanoscroller/nanoscroller.js')}}"></script>
+		<script src="{{asset('assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+		<script src="{{asset('assets/vendor/magnific-popup/magnific-popup.js')}}"></script>
+		<script src="{{asset('assets/vendor/jquery-placeholder/jquery.placeholder.js')}}"></script>
 
 	</head>
 	<body>
 		<section class="body">
 
+			<!-- Start: notification -->
+
+			<!-- End: notification -->
 			<!-- start: header -->
 			<header class="header">
 				<div class="logo-container">
@@ -54,10 +65,12 @@
 			
 					<div class="search nav-form">
 						<div class="input-group input-search">
-							<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-							</span>
+							<form url="#">
+								<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+								</span>
+							</form>
 						</div>
 					</div>
 			
@@ -128,7 +141,7 @@
 										<li>
 											<a href="#" class="clearfix">
 												<figure class="image">
-													<img src="{{asset('assets/images/!sample-user.jpg')}}" alt="Joseph Doe Junior" class="img-circle" />
+													<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Doe Junior" class="img-circle" />
 												</figure>
 												<span class="title">Joseph Doe</span>
 												<span class="message">Lorem ipsum dolor sit.</span>
@@ -137,7 +150,7 @@
 										<li>
 											<a href="#" class="clearfix">
 												<figure class="image">
-													<img src="{{asset('assets/images/!sample-user.jpg')}}" alt="Joseph Junior" class="img-circle" />
+													<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Junior" class="img-circle" />
 												</figure>
 												<span class="title">Joseph Junior</span>
 												<span class="message truncate">Truncated message. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet lacinia orci. Proin vestibulum eget risus non luctus. Nunc cursus lacinia lacinia. Nulla molestie malesuada est ac tincidunt. Quisque eget convallis diam, nec venenatis risus. Vestibulum blandit faucibus est et malesuada. Sed interdum cursus dui nec venenatis. Pellentesque non nisi lobortis, rutrum eros ut, convallis nisi. Sed tellus turpis, dignissim sit amet tristique quis, pretium id est. Sed aliquam diam diam, sit amet faucibus tellus ultricies eu. Aliquam lacinia nibh a metus bibendum, eu commodo eros commodo. Sed commodo molestie elit, a molestie lacus porttitor id. Donec facilisis varius sapien, ac fringilla velit porttitor et. Nam tincidunt gravida dui, sed pharetra odio pharetra nec. Duis consectetur venenatis pharetra. Vestibulum egestas nisi quis elementum elementum.</span>
@@ -146,7 +159,7 @@
 										<li>
 											<a href="#" class="clearfix">
 												<figure class="image">
-													<img src="{{asset('assets/images/!sample-user.jpg')}}" alt="Joe Junior" class="img-circle" />
+													<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joe Junior" class="img-circle" />
 												</figure>
 												<span class="title">Joe Junior</span>
 												<span class="message">Lorem ipsum dolor sit.</span>
@@ -155,7 +168,7 @@
 										<li>
 											<a href="#" class="clearfix">
 												<figure class="image">
-													<img src="{{asset('assets/images/!sample-user.jpg')}}" alt="Joseph Junior" class="img-circle" />
+													<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Junior" class="img-circle" />
 												</figure>
 												<span class="title">Joseph Junior</span>
 												<span class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet lacinia orci. Proin vestibulum eget risus non luctus. Nunc cursus lacinia lacinia. Nulla molestie malesuada est ac tincidunt. Quisque eget convallis diam.</span>
@@ -229,10 +242,10 @@
 					<div id="userbox" class="userbox">
 						<a href="#" data-toggle="dropdown">
 							<figure class="profile-picture">
-								<img src="{{asset('assets/images/!logged-user.jpg')}}" alt="Joseph Doe" class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
+								<img src="{{asset('assets/images/!logged-user.jpg')}}" alt="Joseph Doe" class="img-circle" data-lock-picture="{{asset('assets/images/!logged-user.jpg')}}" />
 							</figure>
-							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-								<span class="name">John Doe Junior</span>
+							<div class="profile-info" data-lock-name="{{Auth::user()->firstname.' '.Auth::user()->lastname}}" data-lock-email="{{Auth::user()->email}}" >
+								<span class="name">{{Auth::user()->firstname.' '.Auth::user()->lastname}}</span>
 								<span class="role">administrator</span>
 							</div>
 			
@@ -243,13 +256,13 @@
 							<ul class="list-unstyled">
 								<li class="divider"></li>
 								<li>
-									<a role="menuitem" tabindex="-1" href="pages-user-profile.html"><i class="fa fa-user"></i> My Profile</a>
+									<a role="menuitem" tabindex="-1" href="{{url('home/user-profile')}}"><i class="fa fa-user"></i> My Profile</a>
 								</li>
 								<li>
 									<a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fa fa-lock"></i> Lock Screen</a>
 								</li>
 								<li>
-									<a role="menuitem" tabindex="-1" href="pages-signin.html"><i class="fa fa-power-off"></i> Logout</a>
+									<a role="menuitem" tabindex="-1" href="{{url('users/logout')}}"><i class="fa fa-power-off"></i> Logout</a>
 								</li>
 							</ul>
 						</div>
@@ -260,7 +273,7 @@
 			<!-- end: header -->
 
 			<div class="inner-wrapper">
-				<!-- start: sidebar -->
+				<!-- start: sidebar left -->
 				<aside id="sidebar-left" class="sidebar-left">
 				
 					<div class="sidebar-header">
@@ -276,28 +289,21 @@
 						<div class="nano-content">
 							<nav id="menu" class="nav-main" role="navigation">
 								<ul class="nav nav-main">
-									<li>
-										<a href="index.html">
+									<li id="Welcome">
+										<a href="{{url('home/welcome')}}">
 											<i class="fa fa-home" aria-hidden="true"></i>
-											<span>Dashboard</span>
+											<span>Welcome</span>
 										</a>
 									</li>
-									<li>
-										<a href="mailbox-folder.html">
-											<span class="pull-right label label-primary">182</span>
-											<i class="fa fa-envelope" aria-hidden="true"></i>
-											<span>Mailbox</span>
-										</a>
-									</li>
-									<li class="nav-parent nav-expanded nav-active">
+									<li id="User-Center" class="nav-parent">
 										<a>
-											<i class="fa fa-copy" aria-hidden="true"></i>
-											<span>Pages</span>
+											<i class="fa fa-user" aria-hidden="true"></i>
+											<span>User Center</span>
 										</a>
 										<ul class="nav nav-children">
-											<li>
-												<a href="pages-signup.html">
-													 Sign Up
+											<li id="User-Profile">
+												<a href="{{url('home/user-profile')}}">
+													 User Profile
 												</a>
 											</li>
 											<li>
@@ -345,7 +351,7 @@
 													 Invoice
 												</a>
 											</li>
-											<li class="nav-active">
+											<li id="Blank-Page">
 												<a href="pages-blank.html">
 													 Blank Page
 												</a>
@@ -664,115 +670,140 @@
 						</div>
 				
 					</div>
-				
 				</aside>
-				<!-- end: sidebar -->
-
+				<!-- end: sidebar left -->
+				<!-- start: sidebar right -->
+				<aside id="sidebar-right" class="sidebar-right">
+					<div class="nano">
+						<div class="nano-content">
+							<a href="#" class="mobile-close visible-xs">
+								Collapse <i class="fa fa-chevron-right"></i>
+							</a>
+				
+							<div class="sidebar-right-wrapper">
+				
+								<div class="sidebar-widget widget-calendar">
+									<h6>Upcoming Tasks</h6>
+									<div data-plugin-datepicker data-plugin-skin="dark" ></div>
+				
+									<ul>
+										<li>
+											<time datetime="2014-04-19T00:00+00:00">04/19/2014</time>
+											<span>Company Meeting</span>
+										</li>
+									</ul>
+								</div>
+				
+								<div class="sidebar-widget widget-friends">
+									<h6>Friends</h6>
+									<ul>
+										<li class="status-online">
+											<figure class="profile-picture">
+												<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Doe" class="img-circle">
+											</figure>
+											<div class="profile-info">
+												<span class="name">Joseph Doe Junior</span>
+												<span class="title">Hey, how are you?</span>
+											</div>
+										</li>
+										<li class="status-online">
+											<figure class="profile-picture">
+												<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Doe" class="img-circle">
+											</figure>
+											<div class="profile-info">
+												<span class="name">Joseph Doe Junior</span>
+												<span class="title">Hey, how are you?</span>
+											</div>
+										</li>
+										<li class="status-offline">
+											<figure class="profile-picture">
+												<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Doe" class="img-circle">
+											</figure>
+											<div class="profile-info">
+												<span class="name">Joseph Doe Junior</span>
+												<span class="title">Hey, how are you?</span>
+											</div>
+										</li>
+										<li class="status-offline">
+											<figure class="profile-picture">
+												<img src="{{asset('assets/images/sample-user.jpg')}}" alt="Joseph Doe" class="img-circle">
+											</figure>
+											<div class="profile-info">
+												<span class="name">Joseph Doe Junior</span>
+												<span class="title">Hey, how are you?</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+				
+							</div>
+						</div>
+					</div>
+				</aside>
+				<!-- end: sidebar right -->
 				<section role="main" class="content-body">
 					<header class="page-header">
-						<h2>Blank Page</h2>
+						<h2><span class="pagename">Default Page</span></h2>
 					
 						<div class="right-wrapper pull-right">
 							<ol class="breadcrumbs">
 								<li>
-									<a href="index.html">
+									<a href="{{url('home/welcome')}}">
 										<i class="fa fa-home"></i>
 									</a>
 								</li>
-								<li><a href="/">Pages</a></li>
-								<li><span>Blank Page</span></li>
-							</ol>
-					
+								<span id="navbar"></span>
+							</ol>			
 							<a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
 						</div>
 					</header>
+					<!-- message -->
+					@if(Session::has('message'))
+						<?php 
+						//type: default, primary, success, info, warning, danger, dark
+						$messageType = 'default';
+						$messageIcon = "<i class='fa fa-flag'></i>";
+							if(Session::has('messageType'))
+							{
+								$messageType = Session::get('messageType');
+								switch ($messageType) {
+									case 'success':
+										$messageIcon = "<i class='fa fa-check-circle'></i>";
+										break;
 
+									case 'warning':
+										$messageIcon = "<i class='fa fa-warning'></i>";
+										break;
+
+									case 'info':
+										$messageIcon = "<i class='fa fa-info-circle'></i>";
+										break;
+
+									case 'danger':
+										$messageIcon = "<i class='fa fa-times-circle'></i>";
+										break;
+										
+									default:
+										break;
+								}
+							}
+						echo "<div class='alert alert-".$messageType."'>";
+						?>
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+							<p class="m-none text-semibold h6">
+								{{$messageIcon.' '.Session::get('message')}}
+							<p>
+						</div>
+					@endif
 					<!-- start: page -->
-					{{$content}}
+					{{$content or ''}}
 
 					<!-- end: page -->
 				</section>
 			</div>
 
-			<aside id="sidebar-right" class="sidebar-right">
-				<div class="nano">
-					<div class="nano-content">
-						<a href="#" class="mobile-close visible-xs">
-							Collapse <i class="fa fa-chevron-right"></i>
-						</a>
-			
-						<div class="sidebar-right-wrapper">
-			
-							<div class="sidebar-widget widget-calendar">
-								<h6>Upcoming Tasks</h6>
-								<div data-plugin-datepicker data-plugin-skin="dark" ></div>
-			
-								<ul>
-									<li>
-										<time datetime="2014-04-19T00:00+00:00">04/19/2014</time>
-										<span>Company Meeting</span>
-									</li>
-								</ul>
-							</div>
-			
-							<div class="sidebar-widget widget-friends">
-								<h6>Friends</h6>
-								<ul>
-									<li class="status-online">
-										<figure class="profile-picture">
-											<img src="assets/images/!sample-user.jpg" alt="Joseph Doe" class="img-circle">
-										</figure>
-										<div class="profile-info">
-											<span class="name">Joseph Doe Junior</span>
-											<span class="title">Hey, how are you?</span>
-										</div>
-									</li>
-									<li class="status-online">
-										<figure class="profile-picture">
-											<img src="assets/images/!sample-user.jpg" alt="Joseph Doe" class="img-circle">
-										</figure>
-										<div class="profile-info">
-											<span class="name">Joseph Doe Junior</span>
-											<span class="title">Hey, how are you?</span>
-										</div>
-									</li>
-									<li class="status-offline">
-										<figure class="profile-picture">
-											<img src="assets/images/!sample-user.jpg" alt="Joseph Doe" class="img-circle">
-										</figure>
-										<div class="profile-info">
-											<span class="name">Joseph Doe Junior</span>
-											<span class="title">Hey, how are you?</span>
-										</div>
-									</li>
-									<li class="status-offline">
-										<figure class="profile-picture">
-											<img src="assets/images/!sample-user.jpg" alt="Joseph Doe" class="img-circle">
-										</figure>
-										<div class="profile-info">
-											<span class="name">Joseph Doe Junior</span>
-											<span class="title">Hey, how are you?</span>
-										</div>
-									</li>
-								</ul>
-							</div>
-			
-						</div>
-					</div>
-				</div>
-			</aside>
-		</section>
-
-		<!-- Vendor -->
-		<script src="{{asset('assets/vendor/jquery/jquery.js')}}"></script>
-		<script src="{{asset('assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js')}}"></script>
-		<script src="{{asset('assets/vendor/bootstrap/js/bootstrap.js')}}"></script>
-		<script src="{{asset('assets/vendor/nanoscroller/nanoscroller.js')}}"></script>
-		<script src="{{asset('assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
-		<script src="{{asset('assets/vendor/magnific-popup/magnific-popup.js')}}"></script>
-		<script src="{{asset('assets/vendor/jquery-placeholder/jquery.placeholder.js')}}"></script>
 		
-		<!-- Theme Base, Components and Settings -->
+		<!-- Theme Base, Components and Settings, Lock Page Templete-->
 		<script src="{{asset('assets/javascripts/theme.js')}}"></script>
 		
 		<!-- Theme Custom -->
@@ -780,5 +811,7 @@
 		
 		<!-- Theme Initialization Files -->
 		<script src="{{asset('assets/javascripts/theme.init.js')}}"></script>
+
+		</section>
 	</body>
 </html>

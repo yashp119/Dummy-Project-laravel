@@ -34,6 +34,14 @@
 // User RESTful Routes
 Route::controller('users','UsersController');
 
+//excel test
+//Route::get('excel/loadtest/{filepath?}','ExcelController@test');
+//Route::get('excel/loadToView/{filepath?}/{sheetnum?}','ExcelController@loadToView');
+Route::controller('excel','ExcelController');
+
+//home test
+Route::controller('home','HomeController');
+Route::get('home','HomeController@getWelcome');
 
 /** ------------------------------------------
  *  Test
@@ -51,16 +59,12 @@ Route::get('test',function(){
 	return View::make('test');
 });
 
-Route::get('home','ApiController@home');
-
 Route::get('login',function(){
 	return View::make('main');
 });
 
-//excel test
-Route::get('excel/load/{filepath?}','ExcelController@load');
-Route::get('excel/loadToView/{filepath?}/{sheetnum?}','ExcelController@loadToView');
-Route::controller('excel','ExcelController');
+
+
 
 //salesforce test
 Route::get('/testSF', function() {
