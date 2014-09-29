@@ -65,10 +65,48 @@ class ExcelController extends BaseController {
 
 
 	public function getTest() {
-		$this->layout->content = View::make('excel.upload-wizard');
+		$this->layout->content = View::make('excel.test');
 		//return View::make('excel.test');
 	}
+/* price database*/
+	public function getPriceDatabase(){
+		$this->layout->content = View::make('excel.price-database');
+	}
 
+
+/* upload wizard*/
+	public function getUploadWizard() {
+		$this->layout->content = View::make('excel.upload-wizard');
+	}
+	//first step upload excel file
+	public function postUploadFile() {
+		$inputFilePath = $this->_getInputFilePath();
+		if(is_null($inputFilePath))
+		{
+			return Redirect::to('excel/upload-wizard')->with('message','Invalid Excel File')->with('messageType','danger')->withInput();
+		}
+		elseif(!Input::has('table'))
+		{
+			return Redirect::to('excel/upload-wizard')->with('message','Please select a table')->with('messageType','info')->withInput();
+		}
+		else
+		{
+			$this->_init($inputFilePath);
+			$excel = array(	'sheetsArray'	=>	$this->sheetsArray,
+							'sheetsNumber'	=>	$this->sheetsNumber, 
+							'sheetsTitles'	=>	$this->sheetsTitles,
+							'totalHeaders'	=>	$this->totalHeaders);
+			//skip the first and last two columns
+			$columns = array_slice($this->_getTableColumnNames(Input::get('table')),1,-2);
+			return Redirect::to('excel/upload-wizard')->with('tab', 2)->with('excel',$excel)->with('columns',$columns);
+		}
+	}
+	//second step match excel fields and table columns
+	public function postMatchField() {
+		$data = Input::all();
+
+		return Redirect::to('test')->with('data', $data);
+	}
 	public function postTest() {
 		$inputFilePath = $this->_getInputFilePath();
 		if(!is_null($inputFilePath))
@@ -86,13 +124,28 @@ class ExcelController extends BaseController {
 		}
 	}
 
+	//get table column names
+	public function _getTableColumnNames($tableName){
+		switch ($tableName) {
+			case 'sales':
+				return Schema::getColumnListing('data_sales');
+				break;
+			case 'medassets':
+				return Schema::getColumnListing('data_medassets');
+				break;
+			default:
+				return null;
+				break;
+		}
+	}
+
 	//initialize excel data
 	public function _init($inputFilePath) {
 		//remember in cache for 10 minutes
 		$this->reader = Excel::load($inputFilePath)->remember(10)->noHeading();
 		//get all sheets
 		$this->sheets = $this->reader->all();
-		//sheets array skip first row
+		//sheets array with heading
 		$this->sheetsArray = $this->sheets->toArray();
 		//count the number of sheets
 		$this->sheetsNumber = count($this->sheets);
@@ -176,7 +229,11 @@ class ExcelController extends BaseController {
 //test function
 	public function getLoadtest($inputFilePath = 'PFBM07131A.xlsx',$selectedSheetIndex = 0){			
 		echo "<pre>";
-		$reader = Excel::load($inputFilePath)->remember(10)->noHeading();
+
+		$this->_init($inputFilePath);
+		print_r($this->sheetsArray);
+
+/*		$reader = Excel::load($inputFilePath)->remember(10)->noHeading();
 		$sheets = $reader->all();
 		print_r($sheets->toArray());
 		//echo $sheets;
@@ -186,7 +243,7 @@ class ExcelController extends BaseController {
 			//print_r($sheet->get(0)->toArray());
 			//print_r($sheet->toArray());
 		}
-		print_r($sheetsTitles);
+		print_r($sheetsTitles);*/
 		//$reader->get();
 		//$sheets = $reader->all();
 		//print_r($sheets->get(0));

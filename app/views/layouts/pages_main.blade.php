@@ -65,7 +65,7 @@
 			
 					<div class="search nav-form">
 						<div class="input-group input-search">
-							<form url="#">
+							<form action="{{url('excel/price-database')}}" method="GET">
 								<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
 								<span class="input-group-btn">
 									<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
@@ -306,172 +306,22 @@
 													 User Profile
 												</a>
 											</li>
-											<li>
-												<a href="pages-signin.html">
-													 Sign In
-												</a>
-											</li>
-											<li>
-												<a href="pages-recover-password.html">
-													 Recover Password
-												</a>
-											</li>
-											<li>
-												<a href="pages-lock-screen.html">
-													 Locked Screen
-												</a>
-											</li>
-											<li>
-												<a href="pages-user-profile.html">
-													 User Profile
-												</a>
-											</li>
-											<li>
-												<a href="pages-session-timeout.html">
-													 Session Timeout
-												</a>
-											</li>
-											<li>
-												<a href="pages-calendar.html">
-													 Calendar
-												</a>
-											</li>
-											<li>
-												<a href="pages-timeline.html">
-													 Timeline
-												</a>
-											</li>
-											<li>
-												<a href="pages-media-gallery.html">
-													 Media Gallery
-												</a>
-											</li>
-											<li>
-												<a href="pages-invoice.html">
-													 Invoice
-												</a>
-											</li>
-											<li id="Blank-Page">
-												<a href="pages-blank.html">
-													 Blank Page
-												</a>
-											</li>
-											<li>
-												<a href="pages-404.html">
-													 404
-												</a>
-											</li>
-											<li>
-												<a href="pages-500.html">
-													 500
-												</a>
-											</li>
 										</ul>
 									</li>
-									<li class="nav-parent">
+									<li id="Price-Center" class="nav-parent">
 										<a>
 											<i class="fa fa-tasks" aria-hidden="true"></i>
-											<span>UI Elements</span>
+											<span>Price Center</span>
 										</a>
 										<ul class="nav nav-children">
-											<li>
-												<a href="ui-elements-typography.html">
-													 Typography
+											<li id="Upload-Wizard">
+												<a href="{{url('excel/upload-wizard')}}">
+													 Upload Wizard
 												</a>
 											</li>
-											<li>
-												<a href="ui-elements-icons.html">
-													 Icons
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-tabs.html">
-													 Tabs
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-panels.html">
-													 Panels
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-widgets.html">
-													 Widgets
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-buttons.html">
-													 Buttons
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-alerts.html">
-													 Alerts
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-notifications.html">
-													 Notifications
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-modals.html">
-													 Modals
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-lightbox.html">
-													 Lightbox
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-progressbars.html">
-													 Progress Bars
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-sliders.html">
-													 Sliders
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-carousels.html">
-													 Carousels
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-accordions.html">
-													 Accordions
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-nestable.html">
-													 Nestable
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-tree-view.html">
-													 Tree View
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-grid-system.html">
-													 Grid System
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-charts.html">
-													 Charts
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-animations.html">
-													 Animations
-												</a>
-											</li>
-											<li>
-												<a href="ui-elements-extra.html">
-													 Extra
+											<li id="Price-Database">
+												<a href="{{url('excel/price-database')}}">
+													 Price Database
 												</a>
 											</li>
 										</ul>

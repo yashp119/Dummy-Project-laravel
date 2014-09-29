@@ -6,144 +6,186 @@
 <script src="{{asset('assets/vendor/bootstrap-wizard/jquery.bootstrap.wizard.js')}}"></script>
 <script src="{{asset('assets/vendor/pnotify/pnotify.custom.js')}}"></script>
 
-<!-- Examples -->
-<script src="{{asset('assets/javascripts/forms/quantum.wizard.js')}}"></script> 
+<!-- jQuery Specify page Navigation bar and active status -->
+<script type="text/javascript">
+	//set page name here
+	pagename = "Upload Wizard";
+</script>
+
+<?php
+	if(Session::has('tab'))
+		$tab = Session::get('tab');
+	else
+	 	$tab = 1;
+?>
 
 <div class="row">
 	<div class="col-xs-12">
-		<section class="panel form-wizard" id="w4">
+		<section class="panel form-wizard">
 			<header class="panel-heading">
 				<div class="panel-actions">
 					<a href="#" class="fa fa-caret-down"></a>
-					<a href="#" class="fa fa-times"></a>
+					<!-- <a href="#" class="fa fa-times"></a> -->
 				</div>
 
 				<h2 class="panel-title">Excel Upload Wizard</h2>
 			</header>
-			<div class="panel-body">
-				<div class="wizard-progress wizard-progress-lg">
-					<div class="steps-progress">
-						<div class="progress-indicator"></div>
-					</div>
-					<ul class="wizard-steps">
-						<li class="active">
-							<a href="#w4-account" data-toggle="tab"><span>1</span>Choose File</a>
-						</li>
-						<li>
-							<a href="#w4-profile" data-toggle="tab"><span>2</span>Match Fields</a>
-						</li>
-						<li>
-							<a href="#w4-billing" data-toggle="tab"><span>3</span>Preview Data</a>
-						</li>
-						<li>
-							<a href="#w4-confirm" data-toggle="tab"><span>4</span>Upload To Database</a>
-						</li>
-					</ul>
-				</div>
-
-				<form class="form-horizontal" novalidate="novalidate">
-					<div class="tab-content">
-						<div id="w4-account" class="tab-pane active">
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="w4-username">Username</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" name="username" id="w4-username" required>
-								</div>
+			@if($tab == 1)
+				{{Form::open(array('url'=>'excel/upload-file','files'=>true, 'id'=>'upload-form', 'role'=>'form','class'=>'form-horizontal'))}}
+					<div class="panel-body">
+						<div class="wizard-progress wizard-progress-lg">
+							<div class="steps-progress">
+								<div class="progress-indicator"></div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="w4-password">Password</label>
-								<div class="col-sm-9">
-									<input type="password" class="form-control" name="password" id="w4-password" required minlength="6">
-								</div>
-							</div>
+							<ul class="wizard-steps">
+								<li id="tab1" class="active">
+									<a href="#" ><span>1</span>Choose File</a>
+								</li>
+								<li id="tab2">
+									<a href="#" onclick="document.getElementById('upload-form').submit();"><span>2</span>Match Fields</a>
+								</li>
+								<li id="tab3">
+									<a  ><span>3</span>Preview Data</a>
+								</li>
+								<li id="tab4">
+									<a  ><span>4</span>Upload To Database</a>
+								</li>
+							</ul>
 						</div>
-						<div id="w4-profile" class="tab-pane">
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="w4-first-name">First Name</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" name="first-name" id="w4-first-name" required>
+						
+						<div class="tab-content">
+							<div id="content1" class="tab-pane active">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="excel">Select Execel File to Upload</label>
+									<div class="col-sm-9">
+										<input type="file" name="excel" id='excel' required>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="w4-last-name">Last Name</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" name="last-name" id="w4-last-name" required>
-								</div>
-							</div>
-						</div>
-						<div id="w4-billing" class="tab-pane">
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="w4-cc">Card Number</label>
-								<div class="col-sm-8">
-									<input type="text" class="form-control" name="cc-number" id="w4-cc" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="inputSuccess">Expiration</label>
-								<div class="col-sm-4">
-									<select class="form-control" name="exp-month" required>
-										<option>January</option>
-										<option>February</option>
-										<option>March</option>
-										<option>April</option>
-										<option>May</option>
-										<option>June</option>
-										<option>July</option>
-										<option>August</option>
-										<option>September</option>
-										<option>October</option>
-										<option>November</option>
-										<option>December</option>
-									</select>
-								</div>
-								<div class="col-sm-4">
-									<select class="form-control" name="exp-year" required>
-										<option>2014</option>
-										<option>2015</option>
-										<option>2016</option>
-										<option>2017</option>
-										<option>2018</option>
-										<option>2019</option>
-										<option>2020</option>
-										<option>2021</option>
-										<option>2022</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div id="w4-confirm" class="tab-pane">
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="w4-email">Email</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" name="email" id="w4-email" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
-									<div class="checkbox-custom">
-										<input type="checkbox" name="terms" id="w4-terms" required>
-										<label for="w4-terms">I agree to the terms of service</label>
+								<div>
+									<label class="col-sm-3 control-label" for="table">Select Data Table to store</label>
+									<div class="col-sm-9">
+										<input type="radio" name="table" value="sales" checked="checked" >Sales Data<br>
+										<input type="radio" name="table" value="medassets">MedAssets Data
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</form>
-			</div>
-			<div class="panel-footer">
-				<ul class="pager">
-					<li class="previous disabled">
-						<a><i class="fa fa-angle-left"></i> Previous</a>
-					</li>
-					<li class="finish hidden pull-right">
-						<a>Finish</a>
-					</li>
-					<li class="next">
-						<a>Next <i class="fa fa-angle-right"></i></a>
-					</li>
-				</ul>
-			</div>
+					<div class="panel-footer">
+						<ul class="pager">
+							<li class="previous disabled">
+								<a><i class="fa fa-angle-left"></i> Previous</a>
+							</li>
+							<li class="next">
+								<a onclick="document.getElementById('upload-form').submit();">Next <i class="fa fa-angle-right"></i></a>
+							</li>
+						</ul>
+					</div>
+				{{Form::close()}}
+			@elseif($tab == 2)
+				{{Form::open(array('url'=>'excel/match-field','files'=>true, 'id'=>'upload-form', 'role'=>'form','class'=>'form-horizontal'))}}
+					<div class="panel-body">
+						<div class="wizard-progress wizard-progress-lg">
+							<div class="steps-progress">
+								<div class="progress-indicator"></div>
+							</div>
+							<ul class="wizard-steps">
+								<li id="tab1">
+									<a href="{{url('excel/upload-wizard')}}"><span>1</span>Choose File</a>
+								</li>
+								<li id="tab2" class="active">
+									<a ><span>2</span>Match Fields</a>
+								</li>
+								<li id="tab3">
+									<a  ><span>3</span>Preview Data</a>
+								</li>
+								<li id="tab4">
+									<a  ><span>4</span>Upload To Database</a>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="tab-content">
+							<div id="content2" class="tab-pane active">
+								<div class="form-group">
+								<?php
+									$excel = Session::get('excel');
+									$columns = Session::get('columns');
+								?>
+
+								<label for="selectSheet">Please select a sheet</label>
+								<select id="selectSheet">
+									@for($i = 0; $i < $excel['sheetsNumber']; $i++)
+									<option value="{{$i}}">{{$excel['sheetsTitles'][$i]}}</option>
+									@endfor
+								</select>
+								<script type="text/javascript">
+								var columns = [];
+
+								<?php
+									$k=0;
+									$optionsHtml = array();
+									foreach($excel['totalHeaders'] as $headers){
+										$options = '<option value=""></option>';
+										foreach($headers as $header){
+											$options.= '<option value="'.$header.'">'.$header.'</option>';
+										}
+										echo 'columns['.$k.'] = \''.$options.'\';';
+										$k++;
+									}
+								?>
+
+								$(document).ready(function(){
+									$(".excelColumn").html(columns[0]);
+									$("#selectSheet").change(function(){
+										var i = $("#selectSheet option:selected").val();
+										$(".excelColumn").html(columns[i]);
+									});									
+								});
+								</script>
+
+								<table cellpadding="0" cellspacing="0" border="0">									
+									<thead>
+										<tr>
+											<th>Database Columns</th>
+											<th>File Columns</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach($columns as $column )
+										<tr>
+											<td><label for="column_{{$column}}">{{$column}}</label></td>
+											<td>
+												<select class="excelColumn" name="column['{{$column}}']" id="column_{{$column}}">
+												
+												</select>
+											</td>
+										</tr>
+										@endforeach
+									</tbody>
+								</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<ul class="pager">
+							<li class="previous disabled">
+								<a><i class="fa fa-angle-left"></i> Previous</a>
+							</li>
+							<li class="next">
+								<a onclick="document.getElementById('upload-form').submit();">Next <i class="fa fa-angle-right"></i></a>
+							</li>
+						</ul>
+					</div>
+				{{Form::close()}}
+			@elseif($tab == 3)
+			@elseif($tab == 4)
+			@endif
 		</section>
 	</div>
 </div>
+
+<!-- functional js should put the end of the page -->
+<!-- Examples -->
+<!-- <script src="{{asset('assets/javascripts/forms/quantum.wizard.js')}}"></script>  -->
