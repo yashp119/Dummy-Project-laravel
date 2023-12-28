@@ -5,7 +5,7 @@ pipeline {
         BUILD_NAME = "version-${BUILD_NUMBER}"
         BUCKET_NAME = "php-bucket11"
         ApplicationName = "seecond-php-env"
-        EnvironmentName = "Seecond-php-env-env"
+        EnvironmentName = "seecond-php-env-env"
     }
 
     stages {
@@ -17,6 +17,8 @@ pipeline {
                     sh "ls -l ${BUILD_NAME}.zip"
                     sh "aws s3 cp ${BUILD_NAME}.zip s3://$BUCKET_NAME --region us-east-1"
                     sh "rm -rf ./*"
+                    
+                    
                 }
             }
         }
@@ -35,7 +37,6 @@ pipeline {
                         aws elasticbeanstalk update-environment \
                             --environment-name "${EnvironmentName}" \
                             --version-label "${BUILD_NAME}" \
-                            --option-settings Namespace=aws:elasticbeanstalk:container:php,OptionName=DocumentRoot,Value=/current \
                             --region us-east-1
                     """
                 }
