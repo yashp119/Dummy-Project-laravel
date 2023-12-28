@@ -2,22 +2,24 @@ pipeline {
     agent any
 
     environment {
-        BUILD_NAME = "version-${BUILD_NUMBER}"
-        BUCKET_NAME = "php-bucket11"
-        ApplicationName = "seecond-php-env"
-        EnvironmentName = "seecond-php-env-env"
-        DeploymentDirectory = "/var/app/current"  // Specify the desired deployment directory
+        BuildName = "version-${BUILD_NUMBER}"
+        BucketName = "php-bucket11"
+        ApplicationName = "php-testing-app"
+        EnvironmentName = "Php-testing-app-env"
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
-                    sh "cd /var/lib/jenkins/workspace/php-pipeline/"
-                    sh "zip -r ${BUILD_NAME}.zip ."
-                    sh "ls -l ${BUILD_NAME}.zip"
-                    sh "aws s3 cp ${BUILD_NAME}.zip s3://$BUCKET_NAME --region us-east-1"
-                    sh "rm -rf ./*"
+                    // Zip all files in the workspace
+                    sh "zip -r ${BuildName}.zip ${env.WORKSPACE}/*"
+
+                    // Upload the zip file to S3
+                    sh "aws s3 cp ${BuildName}.zip s3://${BucketName} --region us-east-1"
+
+                    // Remove the local zip file
+                    sh "rm ${BuildName}.zip"
                 }
             }
         }
@@ -30,7 +32,6 @@ pipeline {
                             --application-name "${ApplicationName}" \
                             --version-label "${BUILD_NAME}" \
                             --description "Build created from JENKINS. Job:${JOB_NAME}, BuildId:${BUILD_DISPLAY_NAME}, GitCommit:${GIT_COMMIT}, GitBranch:${GIT_BRANCH}" \
-                            --source-bundle S3Bucket=${BUCKET_NAME},S3Key=${BUILD_NAME}.zip \
                             --region us-east-1
 
                         aws elasticbeanstalk update-environment \
@@ -57,7 +58,7 @@ pipeline {
                     // Remove excess versions and corresponding artifacts from S3
                     for (int i = versionsToKeep; i < versions.size(); i++) {
                         sh "aws elasticbeanstalk delete-application-version --application-name ${ApplicationName} --version-label ${versions[i]} --region us-east-1"
-                        sh "aws s3 rm s3://${BUCKET_NAME}/${versions[i]}.zip --region us-east-1"
+                        sh "aws s3 rm s3://${BucketName}/${versions[i]}.zip --region us-east-1"
                     }
                 }
             }
