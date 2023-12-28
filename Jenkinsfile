@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     sh "cd /var/lib/jenkins/workspace/php-pipeline/"
-                    sh "git archive -v -o $BUILD_NAME.zip --format=zip HEAD"
+                    sh "zip -r $BUILD_NAME.zip ."
                     sh "ls -l $BUILD_NAME.zip"
                     sh "aws s3 cp $BUILD_NAME.zip s3://$BUCKET_NAME --region us-east-1"
                     sh "rm -rf ."
