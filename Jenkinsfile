@@ -2,24 +2,23 @@ pipeline {
     agent any
 
     environment {
-        BuildName = "version-${BUILD_NUMBER}"
-        BucketName = "php-bucket11"
-        ApplicationName = "php-testing-app"
-        EnvironmentName = "Php-testing-app-env"
+        BUILD_NAME = "version-${BUILD_NUMBER}"
+        BUCKET_NAME = "php-bucket11"
+        ApplicationName = "php-testing"
+        EnvironmentName = "php-testing-env"
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
-                    // Zip all files in the workspace
-                    sh "zip -r ${BuildName}.zip ${env.WORKSPACE}/*"
-
-                    // Upload the zip file to S3
-                    sh "aws s3 cp ${BuildName}.zip s3://${BucketName} --region us-east-1"
-
-                    // Remove the local zip file
-                    sh "rm ${BuildName}.zip"
+                    sh "cd /var/lib/jenkins/workspace/php-pipeline/"
+                    sh "zip -r ${BUILD_NAME}.zip ."
+                    sh "ls -l ${BUILD_NAME}.zip"
+                    sh "aws s3 cp ${BUILD_NAME}.zip s3://$BUCKET_NAME --region us-east-1"
+                    sh "rm -rf ./*"
+                    
+                    
                 }
             }
         }
@@ -30,16 +29,37 @@ pipeline {
                     sh """
                         aws elasticbeanstalk create-application-version \
                             --application-name "${ApplicationName}" \
-                            --version-label "${BuildName}" \
+                            --version-label "${BUILD_NAME}" \
                             --description "Build created from JENKINS. Job:${JOB_NAME}, BuildId:${BUILD_DISPLAY_NAME}, GitCommit:${GIT_COMMIT}, GitBranch:${GIT_BRANCH}" \
-                            --source-bundle S3Bucket=${BucketName},S3Key=${BuildName}.zip \
+                            --source-bundle S3Bucket=${BUCKET_NAME},S3Key=${BUILD_NAME}.zip \
                             --region us-east-1
 
                         aws elasticbeanstalk update-environment \
                             --environment-name "${EnvironmentName}" \
-                            --version-label "${BuildName}" \
+                            --version-label "${BUILD_NAME}" \
                             --region us-east-1
                     """
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    // Specify the number of versions to keep
+                    def versionsToKeep = 2
+
+                    // Get the list of application versions
+                    def versions = sh(script: "aws elasticbeanstalk describe-application-versions --application-name ${ApplicationName} --region us-east-1 --query 'ApplicationVersions[*].VersionLabel' --output text", returnStdout: true).trim().split()
+
+                    // Sort versions in descending order
+                    versions.sort { a, b -> b.compareTo(a) }
+
+                    // Remove excess versions and corresponding artifacts from S3
+                    for (int i = versionsToKeep; i < versions.size(); i++) {
+                        sh "aws elasticbeanstalk delete-application-version --application-name ${ApplicationName} --version-label ${versions[i]} --region us-east-1"
+                        sh "aws s3 rm s3://${BUCKET_NAME}/${versions[i]}.zip --region us-east-1"
+                    }
                 }
             }
         }
