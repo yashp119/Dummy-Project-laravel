@@ -28,7 +28,7 @@ pipeline {
                             --version-label "${BuildName}" \
                             --description "Build created from JENKINS. Job:${JOB_NAME}, BuildId:${BUILD_DISPLAY_NAME}, GitCommit:${GIT_COMMIT}, GitBranch:${GIT_BRANCH}" \
                             --source-bundle S3Bucket=${BucketName},S3Key=${BuildName}.zip \
-                            --region us-east-1
+                            --region us-east-2
 
                         aws elasticbeanstalk update-environment \
                             --environment-name "${EnvironmentName}" \
